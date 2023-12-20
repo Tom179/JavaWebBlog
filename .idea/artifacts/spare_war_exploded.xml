@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="spare:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/spare_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="spare/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="spare" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/gson-2.9.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../Apache-tomcat-9.0.65/lib/servlet-api.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../..MySQL驱动/mysql-connector-java-8.0.29/mysql-connector-java-8.0.29.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
