@@ -11,6 +11,13 @@
           <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/gson-2.9.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/../../../Apache-tomcat-9.0.65/lib/servlet-api.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/../../../..MySQL驱动/mysql-connector-java-8.0.29/mysql-connector-java-8.0.29.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/httpcomponents-client-4.5.14-bin/lib/httpclient-4.5.14.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/jackson-databind-2.15.3.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/jackson-core-2.15.3.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/jackson-annotations-2.15.3.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/httpcomponents-client-4.5.14-bin/lib/commons-logging-1.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/httpcomponents-client-4.5.14-bin/lib/httpcore-4.4.16.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/../../../.浏览器下载/httpcomponents-client-4.5.14-bin/lib/commons-codec-1.11.jar" />
         </element>
       </element>
     </root>

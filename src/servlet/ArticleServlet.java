@@ -1,10 +1,8 @@
 package servlet;
 
 import DB.ArticleDB;
-import DB.UserDB;
-import Utils.Json;
+import Model.Article;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,52 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/api/v1/Art/*")//增删改
 public class ArticleServlet extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        //TODO
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json;charset=UTF-8");
-        JsonObject jsonObject = Json.Parse(req);
-        // 获取特定参数
-        String username = jsonObject.get("username").getAsString();
-        String password = jsonObject.get("password").getAsString();
-        int role = jsonObject.get("role").getAsInt();
-        Gson gson=new Gson();
-        addUserResp respObj;
-        System.out.println(username+":"+password+":"+role);
-        try {
-            UserDB.createUser(username,password,role);
-            respObj=new addUserResp("添加成功",200);
-        } catch (SQLException e) {
-            respObj=new addUserResp("添加失败",300);
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            respObj=new addUserResp("添加失败",300);
-            throw new RuntimeException(e);
-        }
-        String respJson=gson.toJson(respObj);
-        resp.getWriter().println(respJson);//返回响应
-    }
-    class addUserReq{
-        String username;
-        String password;
-        int role;
-    }
-
-    class addUserResp{
-        String message;
-        int status;
-
-        public addUserResp(String message, int status) {
-            this.message = message;
-            this.status = status;
-        }
-    }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -99,22 +55,45 @@ public class ArticleServlet extends HttpServlet {
 
 
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("进入查询文章函数");
+        //TODO
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
+        String requestURI = req.getRequestURI();
+        String[] pathSegments = requestURI.split("/");
+        if (pathSegments.length >= 2) {
+            String articleID = pathSegments[pathSegments.length - 1];
+            getArticleResp resObj; Gson gson=new Gson();
+            System.out.println("articleID:"+articleID);
+            try {
+                Article article=ArticleDB.GetArticle(Integer.parseInt(articleID));
+                resObj=new getArticleResp(200,"文章信息查询成功", article);
+                System.out.println(article.toString());
+                String respJson=gson.toJson(resObj);
+                resp.getWriter().println(respJson);
 
+
+            } catch (Exception e) {
+                resObj=new getArticleResp(300,"文章信息获取失败",null);
+                String respJson=gson.toJson(resObj);
+                resp.getWriter().println(respJson);
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
     }
-    class modifyUserReq{
 
+    class getArticleResp{
+        int status;
+        String message;
+        Article data;
+
+        public getArticleResp(int status, String message, Article data) {
+            this.status = status;
+            this.message = message;
+            this.data = data;
+        }
     }
-    class modifyUserResp{
 
-    }
-
-
-
-
-    public static boolean AddUser(){
-
-        return true;
-    }
 }

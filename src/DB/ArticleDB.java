@@ -1,11 +1,8 @@
 package DB;
 
 import Model.Article;
-import Model.User;
-import servlet.article;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,20 +50,23 @@ public class ArticleDB {
     }
 
 
-    public static Article GetArticle(String title) {
+    public static Article GetArticle(int id) {
         try (Connection conn = GetConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT * FROM article WHERE title=?")) {
-            ps.setString(1, title);
-
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM article WHERE id=?")) {
+            ps.setInt(1, id);
+Article article;
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
-                    int articleID=resultSet.getInt("id");
+                    String title=resultSet.getString("title");
                     String description=resultSet.getString("description");
                     String content=resultSet.getString("content");
-                    Time created_at=resultSet.getTime("created_at");
+                    String created_at=resultSet.getString("created_at");
                     String img=resultSet.getString("img");
-
-                    return new Article(articleID,title,description,content,created_at,img);
+                    article=new Article(id,title,description,content,created_at,img);
+                    resultSet.close();
+                    ps.close();
+                    conn.close();
+                    return article;
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -84,11 +84,11 @@ public class ArticleDB {
         String sql=null;
         PreparedStatement ps;
         if (NumPerPage==0){//查询所有
-            sql = "SELECT * FROM article WHERE title LIKE ?";
+            sql = "SELECT * FROM article WHERE title LIKE ? order by created_at desc";
             ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + keyName + "%");
         }else {
-            sql = "SELECT * FROM article  WHERE title LIKE ? LIMIT ? OFFSET ?";
+            sql = "SELECT * FROM article  WHERE title LIKE ? order by created_at desc LIMIT ? OFFSET ? ";
             ps = conn.prepareStatement(sql);
             int offset = (PageIndex - 1) * NumPerPage;
             ps.setString(1, "%" + keyName + "%");
@@ -102,11 +102,15 @@ public class ArticleDB {
             String title=resultSet.getString("title");
             String description=resultSet.getString("description");
             String content=resultSet.getString("content");
-            Time created_at=resultSet.getTime("created_at");
+            String created_at=resultSet.getString("created_at");
             String img=resultSet.getString("img");
             Article article = new Article(articleID,title,description,content,created_at,img);
             articleList.add(article);
         }
+
+        resultSet.close();
+        ps.close();
+        conn.close();
         return articleList.toArray(new Article[0]);
     }
 
@@ -117,7 +121,11 @@ public class ArticleDB {
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet resultSet = ps.executeQuery();
         if (resultSet.next()) {
-            return resultSet.getInt("total");
+            int count=resultSet.getInt("total");
+            resultSet.close();
+            ps.close();
+            conn.close();
+            return count;
         }
         return 0;
     }

@@ -1,9 +1,7 @@
 package servlet;
 
 import DB.ArticleDB;
-import DB.UserDB;
 import Model.Article;
-import Model.User;
 import com.google.gson.Gson;
 
 import javax.servlet.annotation.WebServlet;
@@ -28,14 +26,16 @@ public class SearchArticle extends HttpServlet {
         Article[] articles=null;int totalPage;
         try {
             articles= ArticleDB.GetArticles(keyTitle,pageSize,pageNum);////
-            totalPage= UserDB.CountTotalUser();
+            totalPage= ArticleDB.CountTotalArticle();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        respObj=new respObj(articles,"用户列表",200,totalPage);
+        respObj=new respObj(articles,"文章列表",200,totalPage);
         String respJson=gson.toJson(respObj);
         resp.getWriter().println(respJson);
     }

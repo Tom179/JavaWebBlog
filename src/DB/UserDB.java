@@ -44,7 +44,7 @@ public class UserDB {
     }
 
 
-    public static boolean VarifyUser(String username,String password) throws SQLException, ClassNotFoundException {
+    public static String VarifyUser(String username,String password) throws SQLException, ClassNotFoundException {
        Connection conn=GetConnection();
        String sql="select * from users where username=?";
         PreparedStatement ps = conn.prepareStatement(sql);
@@ -52,11 +52,15 @@ public class UserDB {
         ResultSet resultSet = ps.executeQuery();
         if (resultSet.next()) {
 //            System.out.println("该用户真实的密码为:"+resultSet.getString("password"));
-            if (resultSet.getString("password").equals(password))
-                return true;
+            if (resultSet.getString("password").equals(password)){
+                resultSet.close();
+                ps.close();
+                conn.close();
+                return resultSet.getString("role");
+            }
         }
 
-        return false;
+        return null;
     }
 
 
@@ -67,8 +71,14 @@ public class UserDB {
         ps.setString(1,username);
         ResultSet resultSet = ps.executeQuery();
         if (resultSet.next()) {
+            resultSet.close();
+            ps.close();
+            conn.close();
             return true;
         } else {
+            resultSet.close();
+            ps.close();
+            conn.close();
             return false;
         }
     }
@@ -85,7 +95,10 @@ public class UserDB {
                     String password = resultSet.getString("password");
                     int role=resultSet.getInt("role");
 
-                    return new User(userId, username, password,role); // 假设有一个 User 类，根据实际情况调整
+                    resultSet.close();
+                    ps.close();
+                    conn.close();
+                    return new User(userId, username, password,role);
                 }
             }
 
@@ -125,6 +138,10 @@ public class UserDB {
             User u = new User(id,username,password,role);
             userList.add(u);
         }
+
+        resultSet.close();
+        ps.close();
+        conn.close();
         return userList.toArray(new User[0]);
     }
 
@@ -135,7 +152,11 @@ public class UserDB {
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet resultSet = ps.executeQuery();
         if (resultSet.next()) {
-            return resultSet.getInt("total");
+            int count=resultSet.getInt("total");
+            resultSet.close();
+            ps.close();
+            conn.close();
+            return count;
         }
     return 0;
     }

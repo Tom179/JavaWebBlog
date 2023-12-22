@@ -29,13 +29,14 @@ public class loginServlet extends HttpServlet {
 
         respObj r;  Gson gson=new Gson();
         try {
-            if(UserDB.VarifyUser(username,password)){
-              r=new respObj("登录成功",200,"true");
+            String role=UserDB.VarifyUser(username,password);
+            if(role!=null){
+              r=new respObj("登录成功",200,role);
                 String jsonText=gson.toJson(r);
                 resp.getWriter().println(jsonText);//返回响应
             }
             else {
-                r = new respObj("用户名或密码错误，请重新输入", 300, "false");
+                r = new respObj("用户名或密码错误，请重新输入", 300, null);
                 String respJson=gson.toJson(r);
                 resp.getWriter().println(respJson);//返回响应
             }

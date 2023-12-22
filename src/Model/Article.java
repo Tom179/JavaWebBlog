@@ -3,15 +3,15 @@ package Model;
 import java.sql.Time;
 
 public class Article {
-    int ID;
-    String title;
-    String description;
-    String content;
-    Time created_at;
-    String img;
+    public int ID;
+    public String title;
+    public String description;
+    public String content;
+    public String created_at;
+    public String img;
 
 
-    public Article(int ID, String title, String description, String content, Time created_at, String img) {
+    public Article(int ID, String title, String description, String content, String created_at, String img) {
         this.ID = ID;
         this.title = title;
         this.description = description;
