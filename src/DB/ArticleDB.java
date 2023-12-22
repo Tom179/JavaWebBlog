@@ -19,9 +19,9 @@ public class ArticleDB {
         return connection;
     }
 
-    public static void createArticle(String title,String description,String content,String img) throws SQLException, ClassNotFoundException {
+    public static void createArticle(String title,String description,String content,int created_by,String img) throws SQLException, ClassNotFoundException {
         Connection conn= GetConnection();
-        String sql = "INSERT INTO article (title, description,content,created_at,img) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO article (title, description,content,created_at,created_by,img) VALUES (?,?,?,?,?,?)";
         PreparedStatement ps=conn.prepareStatement(sql);
         ps.setString(1,title);
         ps.setString(2,description);
@@ -29,7 +29,8 @@ public class ArticleDB {
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp timestamp = new Timestamp(currentTimeMillis);
         ps.setTimestamp(4, timestamp);
-        ps.setString(5,img);
+        ps.setInt(5,created_by);
+        ps.setString(6,img);
         ps.execute();
         System.out.println("插入成功");
 
@@ -62,7 +63,8 @@ Article article;
                     String content=resultSet.getString("content");
                     String created_at=resultSet.getString("created_at");
                     String img=resultSet.getString("img");
-                    article=new Article(id,title,description,content,created_at,img);
+                    int created_by=resultSet.getInt("created_by");
+                    article=new Article(id,title,description,content,created_at,created_by,img);
                     resultSet.close();
                     ps.close();
                     conn.close();
@@ -103,8 +105,9 @@ Article article;
             String description=resultSet.getString("description");
             String content=resultSet.getString("content");
             String created_at=resultSet.getString("created_at");
+            int created_by=resultSet.getInt("created_by");
             String img=resultSet.getString("img");
-            Article article = new Article(articleID,title,description,content,created_at,img);
+            Article article = new Article(articleID,title,description,content,created_at,created_by,img);
             articleList.add(article);
         }
 
@@ -129,15 +132,4 @@ Article article;
         }
         return 0;
     }
-
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//        User[] users=GetUsers(0,10);
-        Article[] articles=GetArticles("",0,10);
-        createArticle("第二篇文章","2","asfpqpi","asdoh");
-        System.out.println(Arrays.toString(articles));
-//        System.out.println(VarifyUser("mike","8828"));
-//        System.out.println(CountTotalUser());
-    }
-
 }

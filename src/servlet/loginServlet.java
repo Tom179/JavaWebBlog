@@ -1,6 +1,7 @@
 package servlet;
 
 import DB.UserDB;
+import Model.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import Utils.Json;
@@ -30,13 +31,14 @@ public class loginServlet extends HttpServlet {
         respObj r;  Gson gson=new Gson();
         try {
             String role=UserDB.VarifyUser(username,password);
+            User[] user=UserDB.GetUsers(username,0,0);
             if(role!=null){
-              r=new respObj("登录成功",200,role);
+              r=new respObj("登录成功",200,role,user[0].getID());
                 String jsonText=gson.toJson(r);
                 resp.getWriter().println(jsonText);//返回响应
             }
             else {
-                r = new respObj("用户名或密码错误，请重新输入", 300, null);
+                r = new respObj("用户名或密码错误，请重新输入", 300, null,-1);
                 String respJson=gson.toJson(r);
                 resp.getWriter().println(respJson);//返回响应
             }
@@ -58,10 +60,13 @@ public class loginServlet extends HttpServlet {
         int status;
         String token;
 
-        public respObj(String message, int status, String token) {
+        int id;
+
+        public respObj(String message, int status, String token,int id) {
             this.message = message;
             this.status = status;
             this.token = token;
+            this.id=id;
         }
     }
 }

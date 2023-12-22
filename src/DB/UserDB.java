@@ -53,10 +53,11 @@ public class UserDB {
         if (resultSet.next()) {
 //            System.out.println("该用户真实的密码为:"+resultSet.getString("password"));
             if (resultSet.getString("password").equals(password)){
+                String role=resultSet.getString("role");
                 resultSet.close();
                 ps.close();
                 conn.close();
-                return resultSet.getString("role");
+                return role;
             }
         }
 
@@ -161,13 +162,5 @@ public class UserDB {
     return 0;
     }
 
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-/*//        User[] users=GetUsers(0,10);
-        User[] users=GetUsers(3,2);
-        System.out.println(Arrays.toString(users));
-//        System.out.println(VarifyUser("mike","8828"));*/
-        System.out.println(CountTotalUser());
-    }
 
 }

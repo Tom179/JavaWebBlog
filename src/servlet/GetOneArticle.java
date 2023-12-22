@@ -26,7 +26,7 @@ public class GetOneArticle extends HttpServlet {
             GetArticleResp resObj; Gson gson=new Gson();
             try {
                Article a= ArticleDB.GetArticle(Integer.parseInt(id));
-                resObj=new GetArticleResp("查询成功",200,new Article(a.ID,a.title,a.description,a.content,a.created_at,a.img));
+                resObj=new GetArticleResp("查询成功",200,new Article(a.ID,a.title,a.description,a.content,a.created_at,a.created_by,a.img));
                 String respJson=gson.toJson(resObj);
                 resp.getWriter().println(respJson);
 

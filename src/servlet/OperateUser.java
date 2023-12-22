@@ -28,8 +28,11 @@ public class OperateUser extends HttpServlet {
         addUserResp respObj;
         System.out.println(username+":"+password+":"+role);
         try {
+            if(!UserDB.IsUserExist(username)){
             UserDB.createUser(username,password,role);
-            respObj=new addUserResp("添加成功",200);
+            respObj=new addUserResp("添加成功",200);}
+            else
+                respObj=new addUserResp("用户名已存在,添加失败",300);
         } catch (SQLException e) {
             respObj=new addUserResp("添加失败",300);
             throw new RuntimeException(e);
