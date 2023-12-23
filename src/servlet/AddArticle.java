@@ -31,7 +31,7 @@ public class AddArticle extends HttpServlet {
         String content = filterSensitiveWords(jsonObject.get("content").getAsString());
         String img = jsonObject.get("img").getAsString();
         String created_by=jsonObject.get("UserID").getAsString();
-        System.out.println("上传的作者为："+created_by);
+//        System.out.println("上传的作者为："+created_by);
 
 
         Gson gson=new Gson();
@@ -40,7 +40,7 @@ public class AddArticle extends HttpServlet {
         try {
             System.out.println("开始添加");
             ArticleDB.createArticle(title,desc,content, Integer.parseInt(created_by),img);
-            System.out.println("完成添加");
+//            System.out.println("完成添加");
             respObj=new addArtResp("添加文章成功",200);
             String respJson=gson.toJson(respObj);
             resp.getWriter().println(respJson);//返回响应

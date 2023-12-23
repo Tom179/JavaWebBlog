@@ -1,4 +1,4 @@
-package Utils;
+package servlet;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class gitupload {
     //github的个人token
-    public static String token = "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";
+    public static String token = "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";
 
     /**
      * 将二进制数据转为base64编码格式数据
@@ -50,9 +50,10 @@ public class gitupload {
     public static String uploadToGitHub(String base64Content, String filePath, String token) throws IOException {
         filePath = filePath.replace("\\", "/");
 
-        String repo = "Tom179/imgs"; // GitHub 仓库名
+        String repo = "Tom179/ImgStorage"; // GitHub 仓库名
         String uploadUrl = "https://api.github.com/repos/" + repo + "/contents/imgs/" + filePath; // API URL
-        System.out.println(uploadUrl);
+        System.out.println("图片路径为"+filePath);
+        System.out.println("uploadURL:"+uploadUrl);
 
         // 创建请求体
         Map<String, Object> data = new HashMap<>();
@@ -73,6 +74,7 @@ public class gitupload {
             request.setEntity(new StringEntity(json));
 
             try (CloseableHttpResponse response = client.execute(request)) {
+
                 //获取响应并转为json字符串
                 HttpEntity entity = response.getEntity();
                 String responseString = EntityUtils.toString(entity);
@@ -84,7 +86,11 @@ public class gitupload {
                 JsonNode downloadUrlNode = rootNode.path("content").path("download_url");
                 String downloadUrl = downloadUrlNode.asText();
 
-                System.out.println(downloadUrl);
+//                System.out.println("图片获取地址为:"+downloadUrl);
+//
+//                System.out.println("githubAPI响应状态码: " + response.getStatusLine().getStatusCode());
+//                System.out.println("响应 JSON: " + responseString);
+
 
                 return downloadUrl;
             }catch (Exception e){

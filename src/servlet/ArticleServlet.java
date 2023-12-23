@@ -1,6 +1,7 @@
 package servlet;
 
 import DB.ArticleDB;
+import DB.UserDB;
 import Model.Article;
 import com.google.gson.Gson;
 
@@ -68,14 +69,14 @@ public class ArticleServlet extends HttpServlet {
             System.out.println("articleID:"+articleID);
             try {
                 Article article=ArticleDB.GetArticle(Integer.parseInt(articleID));
-                resObj=new getArticleResp(200,"文章信息查询成功", article);
-                System.out.println(article.toString());
+                resObj=new getArticleResp(200,"文章信息查询成功", article, UserDB.GetUserById(article.created_by).getUsername());
+//                System.out.println(article.toString());
                 String respJson=gson.toJson(resObj);
                 resp.getWriter().println(respJson);
 
 
             } catch (Exception e) {
-                resObj=new getArticleResp(300,"文章信息获取失败",null);
+                resObj=new getArticleResp(300,"文章信息获取失败",null,null);
                 String respJson=gson.toJson(resObj);
                 resp.getWriter().println(respJson);
                 e.printStackTrace();
@@ -88,11 +89,13 @@ public class ArticleServlet extends HttpServlet {
         int status;
         String message;
         Article data;
+        String authorName;
 
-        public getArticleResp(int status, String message, Article data) {
+        public getArticleResp(int status, String message, Article data,String authorName) {
             this.status = status;
             this.message = message;
             this.data = data;
+            this.authorName=authorName;
         }
     }
 

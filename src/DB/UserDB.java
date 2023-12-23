@@ -85,21 +85,21 @@ public class UserDB {
     }
 
 
-    public static User GetUserByUsername(String username) {
+    public static User GetUserById(int id) {
         try (Connection conn = GetConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE username=?")) {
-            ps.setString(1, username);
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE id=?")) {
+            ps.setInt(1, id);
 
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
-                    int userId = resultSet.getInt("id");
+                    String username = resultSet.getString("username");
                     String password = resultSet.getString("password");
                     int role=resultSet.getInt("role");
 
                     resultSet.close();
                     ps.close();
                     conn.close();
-                    return new User(userId, username, password,role);
+                    return new User(id,username, password,role);
                 }
             }
 

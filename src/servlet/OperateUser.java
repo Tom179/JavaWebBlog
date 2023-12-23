@@ -1,6 +1,7 @@
 package servlet;
 
 import DB.UserDB;
+import Model.User;
 import Utils.Json;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -95,16 +96,32 @@ public class OperateUser extends HttpServlet {
     }
 
 
-
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
+        String requestURI = req.getRequestURI();
+        String[] pathSegments = requestURI.split("/");
+        if (pathSegments.length >= 2) {
+            String userId = pathSegments[pathSegments.length - 1];
+             Gson gson=new Gson();
+//            System.out.println(u.toString());
+            getUserResp respObj=new getUserResp(200,"查询用户成功",UserDB.GetUserById(Integer.parseInt(userId)));
+            String respJson=gson.toJson(respObj);
+            resp.getWriter().println(respJson);
+        }
     }
-    class modifyUserReq{
 
-    }
-    class modifyUserResp{
+    class getUserResp{
+        int status;
+        String message;
+        User data;
 
+        public getUserResp(int status, String message, User user) {
+            this.status = status;
+            this.message = message;
+            data = user;
+        }
     }
 
 }
