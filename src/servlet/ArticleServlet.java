@@ -99,4 +99,8 @@ public class ArticleServlet extends HttpServlet {
         }
     }
 
+    @Override//修改文章
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
 }

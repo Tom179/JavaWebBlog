@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class gitupload {
     //github的个人token
-    public static String token = "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";
+    public static String token = "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";
 
     /**
      * 将二进制数据转为base64编码格式数据

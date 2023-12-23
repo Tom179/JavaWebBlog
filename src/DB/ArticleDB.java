@@ -38,6 +38,25 @@ public class ArticleDB {
         conn.close();
     }
 
+    public static void modifyArticle(String title,String description,String content,int created_by,String img) throws SQLException, ClassNotFoundException {
+        Connection conn= GetConnection();
+        String sql = "update article set title=?,description=?,content=?,created_at=?,created_by=?,img=?";
+        PreparedStatement ps=conn.prepareStatement(sql);
+        ps.setString(1,title);
+        ps.setString(2,description);
+        ps.setString(3,content);
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(currentTimeMillis);
+        ps.setTimestamp(4, timestamp);
+        ps.setInt(5,created_by);
+        ps.setString(6,img);
+        ps.execute();
+        System.out.println("修改成功");
+
+        ps.close();
+        conn.close();
+    }
+
 
     public static void deleteArticle(int id) throws SQLException, ClassNotFoundException {
         Connection conn= GetConnection();
@@ -79,6 +98,7 @@ Article article;
     }
 
 
+
     public static Article[] GetArticles(String keyName,int NumPerPage,int PageIndex) throws SQLException, ClassNotFoundException {
         List<Article> articleList = new ArrayList<>();
         Connection conn=GetConnection();
@@ -117,11 +137,68 @@ Article article;
         return articleList.toArray(new Article[0]);
     }
 
+
+
+    public static Article[] GetPersonalArticles(int userid,int NumPerPage,int PageIndex) throws SQLException, ClassNotFoundException {
+        List<Article> articleList = new ArrayList<>();
+        Connection conn=GetConnection();
+
+        String sql=null;
+        PreparedStatement ps;
+        if (NumPerPage==0){//查询所有
+            sql = "SELECT * FROM article WHERE created_by =? order by created_at desc";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userid);
+        }else {
+            sql = "SELECT * FROM article  WHERE created_by =? order by created_at desc LIMIT ? OFFSET ? ";
+            ps = conn.prepareStatement(sql);
+            int offset = (PageIndex - 1) * NumPerPage;
+            ps.setInt(1, userid);
+            ps.setInt(2, NumPerPage);
+            ps.setInt(3, offset);
+        }
+
+        ResultSet resultSet = ps.executeQuery();
+        while (resultSet.next()) {
+            int articleID=resultSet.getInt("id");
+            String title=resultSet.getString("title");
+            String description=resultSet.getString("description");
+            String content=resultSet.getString("content");
+            String created_at=resultSet.getString("created_at");
+            int created_by=resultSet.getInt("created_by");
+            String img=resultSet.getString("img");
+            Article article = new Article(articleID,title,description,content,created_at,created_by,img);
+            articleList.add(article);
+        }
+
+        resultSet.close();
+        ps.close();
+        conn.close();
+        return articleList.toArray(new Article[0]);
+    }
+
     public static int CountTotalArticle() throws SQLException, ClassNotFoundException {
         Connection conn=GetConnection();
         String sql = "SELECT COUNT(*) AS total FROM article";
 
         PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet resultSet = ps.executeQuery();
+        if (resultSet.next()) {
+            int count=resultSet.getInt("total");
+            resultSet.close();
+            ps.close();
+            conn.close();
+            return count;
+        }
+        return 0;
+    }
+
+    public static int CountTotalUserArticle(int userid) throws SQLException, ClassNotFoundException {
+        Connection conn=GetConnection();
+        String sql = "SELECT COUNT(*) AS total FROM article where created_by =?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, userid);
+
         ResultSet resultSet = ps.executeQuery();
         if (resultSet.next()) {
             int count=resultSet.getInt("total");
