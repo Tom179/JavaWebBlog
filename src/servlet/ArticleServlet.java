@@ -3,7 +3,9 @@ package servlet;
 import DB.ArticleDB;
 import DB.UserDB;
 import Model.Article;
+import Utils.Json;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/api/v1/Art/*")//增删改
 public class ArticleServlet extends HttpServlet {
@@ -102,5 +105,48 @@ public class ArticleServlet extends HttpServlet {
     @Override//修改文章
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        System.out.println("进入到修改文章的post函数");
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
+        JsonObject jsonObject = Json.Parse(req);
+        // 获取特定参数
+        String id=jsonObject.get("id").getAsString();
+        String title = jsonObject.get("title").getAsString();
+        String desc = jsonObject.get("description").getAsString();
+        String content = jsonObject.get("content").getAsString();
+        String img = jsonObject.get("img").getAsString();
+        String created_by=jsonObject.get("UserID").getAsString();
+
+
+        Gson gson=new Gson();
+        updateArtResp respObj;
+        System.out.println("id:"+id+"\nimg:"+img);
+        try {
+            ArticleDB.modifyArticle(Integer.parseInt(id),title,desc,content,Integer.parseInt(created_by),img);
+            respObj=new updateArtResp("修改文章成功",200);
+            String respJson=gson.toJson(respObj);
+            resp.getWriter().println(respJson);//返回响应
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            respObj=new updateArtResp("文章修改失败",300);
+            String respJson=gson.toJson(respObj);
+            resp.getWriter().println(respJson);//返回响应
+            throw new RuntimeException(e);
+        }
+
+
     }
+
+
+    class updateArtResp{
+        int status;
+        String message;
+
+        public updateArtResp(String message,int status) {
+            this.status = status;
+            this.message = message;
+        }
+    }
+
 }

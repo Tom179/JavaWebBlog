@@ -38,9 +38,9 @@ public class ArticleDB {
         conn.close();
     }
 
-    public static void modifyArticle(String title,String description,String content,int created_by,String img) throws SQLException, ClassNotFoundException {
+    public static void modifyArticle(int id,String title,String description,String content,int created_by,String img) throws SQLException, ClassNotFoundException {
         Connection conn= GetConnection();
-        String sql = "update article set title=?,description=?,content=?,created_at=?,created_by=?,img=?";
+        String sql = "update article set title=?,description=?,content=?,created_at=?,created_by=?,img=? where id=?";
         PreparedStatement ps=conn.prepareStatement(sql);
         ps.setString(1,title);
         ps.setString(2,description);
@@ -50,6 +50,7 @@ public class ArticleDB {
         ps.setTimestamp(4, timestamp);
         ps.setInt(5,created_by);
         ps.setString(6,img);
+        ps.setInt(7,id);
         ps.execute();
         System.out.println("修改成功");
 
