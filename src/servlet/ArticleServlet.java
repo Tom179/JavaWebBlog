@@ -15,10 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/api/v1/Art/*")//增删改
+@WebServlet("/api/v1/Art/*")//删查改
 public class ArticleServlet extends HttpServlet {
-
-
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //TODO

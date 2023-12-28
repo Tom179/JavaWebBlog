@@ -12,8 +12,8 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.Base64;
 
-import static servlet.gitupload.inputStreamToByteArray;
-import static servlet.gitupload.uploadToGitHub;
+import static servlet.githubUpload.inputStreamToByteArray;
+import static servlet.githubUpload.uploadToGitHub;
 
 @WebServlet("/api/v1/upload")//资源上传
 @MultipartConfig
@@ -22,13 +22,11 @@ public class UploadImg extends HttpServlet {
             throws ServletException, IOException {
         // 获取上传的文件部分
         Part filePart = req.getPart("file");
-
-
         byte[] fileContent = inputStreamToByteArray(filePart.getInputStream());
         String encodedString = Base64.getEncoder().encodeToString(fileContent);
         String filename = "cover"+ System.currentTimeMillis()+".jpg";//加时间戳
 
-        String str = uploadToGitHub(encodedString,filename, gitupload.token);
+        String str = uploadToGitHub(encodedString,filename, githubUpload.token);
         System.out.println("图片上传到github成功");
 
         req.setCharacterEncoding("UTF-8");

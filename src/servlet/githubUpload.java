@@ -15,9 +15,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class gitupload {
-    //github的个人token
-    public static String token = "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";
+public class githubUpload {
+    //github的token
+    public static String token = "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";
 
     /**
      * 将二进制数据转为base64编码格式数据
@@ -25,8 +25,6 @@ public class gitupload {
      * @return
      * @throws IOException
      */
-
-
     public static byte[] inputStreamToByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;

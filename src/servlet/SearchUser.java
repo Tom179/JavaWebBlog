@@ -21,7 +21,6 @@ public class SearchUser extends HttpServlet {
         String keyName=req.getParameter("username");
         int pageSize= Integer.parseInt(req.getParameter("pagesize"));//每一页数
         int pageNum= Integer.parseInt(req.getParameter("pagenum"));//当前页数
-//        System.out.println("获取的请求参数  keyName："+keyName+" pageSize:"+pageSize+" pageNum"+pageNum);
 
         //默认发送Num:1、Size:0,也就是一页查询所有内容
         respObj respObj; Gson gson=new Gson();

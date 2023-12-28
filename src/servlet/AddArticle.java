@@ -56,18 +56,16 @@ public class AddArticle extends HttpServlet {
 
 
     public static String filterSensitiveWords(String input) {
-        // 定义敏感词列表
         String[] sensitiveWords = {"敏感词1", "敏感词2", "敏感词3","狗屁"};
 
         // 构建正则表达式
         String regex = String.join("|", sensitiveWords);
         Pattern pattern = Pattern.compile(regex);
 
-        // 使用正则表达式匹配和替换敏感词
         Matcher matcher = pattern.matcher(input);
         StringBuffer result = new StringBuffer();
         while (matcher.find()) {
-            // 替换敏感词为"*"，根据实际需求可以修改替换策略
+
             matcher.appendReplacement(result, "*");
         }
         matcher.appendTail(result);
